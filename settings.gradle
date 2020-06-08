@@ -1,0 +1,3 @@
+rootProject.name='BottomNavWatson'
+include ':app'
+include ':bottom-nav-watson'
