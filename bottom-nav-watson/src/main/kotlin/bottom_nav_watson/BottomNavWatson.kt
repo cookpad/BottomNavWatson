@@ -120,7 +120,9 @@ fun BottomNavigationView.setupWithNavController(
                 }
 
                 destinationChangedListener?.let {
-                    selectedNavController.value?.removeOnDestinationChangedListener(destinationChangedListener)
+                    selectedNavController.value?.removeOnDestinationChangedListener(
+                        destinationChangedListener
+                    )
                 }
                 selectedItemTag = newlySelectedItemTag
                 isOnFirstFragment = selectedItemTag == firstFragmentTag
@@ -202,13 +204,13 @@ private fun BottomNavigationView.setupItemReselected(
         navigationItemReselectedListener?.onNavigationItemReselected(item)
 
         val newlySelectedItemTag = graphIdToTagMap[item.itemId]
-        val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
-                as NavHostFragment
-        val navController = selectedFragment.navController
-        // Pop the back stack to the start destination of the current navController graph
-        navController.popBackStack(
-            navController.graph.startDestination, false
-        )
+        (fragmentManager.findFragmentByTag(newlySelectedItemTag) as? NavHostFragment)?.let {
+            val navController = it.navController
+            // Pop the back stack to the start destination of the current navController graph
+            navController.popBackStack(
+                navController.graph.startDestination, false
+            )
+        }
     }
 }
 
@@ -266,8 +268,9 @@ private fun AppCompatActivity.obtainNavHostFragment(
         .add(containerId, navHostFragment, fragmentTag)
         .commitNow()
 
-    navHostFragment.navController.graph = navHostFragment.navController.navInflater.inflate(graphResId)
-        .also { graph -> graph.startDestination = startDestination }
+    navHostFragment.navController.graph =
+        navHostFragment.navController.navInflater.inflate(graphResId)
+            .also { graph -> graph.startDestination = startDestination }
 
     intent = originalIntent
 
