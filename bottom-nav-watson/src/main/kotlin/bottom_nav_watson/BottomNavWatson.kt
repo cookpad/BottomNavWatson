@@ -263,7 +263,7 @@ private fun AppCompatActivity.obtainNavHostFragment(
     // but it starts to corrupt the back stack when Don't keep activities is enabled, which is avoided by
     // calling NavHostFragment.create(graphResId) and setting as the start destination of the graph -in the xml
     // declaration- an empty fragment.
-    val navHostFragment = NavHostFragment.create(graphResId)
+    val navHostFragment = LenientNavHostFragment.create(graphResId)
     fragmentManager.beginTransaction()
         .add(containerId, navHostFragment, fragmentTag)
         .commitNow()
