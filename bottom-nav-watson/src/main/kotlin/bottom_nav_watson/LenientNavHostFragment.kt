@@ -15,7 +15,7 @@ class LenientNavHostFragment : NavHostFragment() {
         try {
             super.onDestroyView()
         } catch (e: IllegalStateException) {
-            // We only sallow the exception when it contains the message related with the issue that we know.
+            // We only swallow the exception when it contains the message related with the issue that we know.
             // Otherwise we rethrow, this is brittle as it ties the implementation to a private reporting message error,
             // but we prefer this way to avoid hiding unrelated exceptions.
             if (e.message?.contains("does not have a NavController set") == false) {
