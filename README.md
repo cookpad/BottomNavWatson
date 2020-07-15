@@ -46,5 +46,29 @@ fun BottomNavigationView.setupWithNavController(
 )
 ```
 
+When declaring the nav graph in the xml file, create a destination as follows:
+```xml
+    <fragment
+        android:id="@+id/emptyFragment"
+        android:name="androidx.fragment.app.Fragment" />
+```
+
+Then set that destination as the start one in the nav grahp:
+
+```xml
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/emptyFragment">
+```
+
+This is required by Watson lib to avoid crashing when the graph is inflated for each tab.
+
+### Sample app
+There is a showcase in :app module to have access to a more detailed usage of Watson library.
+
+![](docs/images/first.png) ![](docs/images/second.png) ![](docs/images/detail.png) ![](docs/images/notification.png)
+
+
 ### Disclaimer
 This library is a workaround within the workaround provided in Google Samples, so it may have unexpected side effects. For more info checks the [docs attached in the sources](https://github.com/cookpad/BottomNavWatson/blob/master/bottom-nav-watson/src/main/kotlin/bottom_nav_watson/BottomNavWatson.kt).
