@@ -259,7 +259,7 @@ private fun AppCompatActivity.obtainNavHostFragment(
     val originalIntent = intent
     intent = Intent()
 
-    // Calling NavHostFragment() will work and that ould avoid creating an empty fragment as the start destination,
+    // Calling NavHostFragment() will work and that would avoid creating an empty fragment as the start destination,
     // but it starts to corrupt the back stack when Don't keep activities is enabled, which is avoided by
     // calling NavHostFragment.create(graphResId) and setting as the start destination of the graph -in the xml
     // declaration- an empty fragment.

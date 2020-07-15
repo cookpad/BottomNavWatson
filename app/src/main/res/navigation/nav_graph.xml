@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/emptyFragment">
+
+    <action
+        android:id="@+id/actionDetailFragment"
+        app:destination="@id/detailFragment" />
+
+    <!-- Required by watson lib to avoid crashing when the graph is inflated for each tab. -->
+    <fragment
+        android:id="@+id/emptyFragment"
+        android:name="androidx.fragment.app.Fragment" />
+
+    <fragment
+        android:id="@id/firstTabFragment"
+        android:name="cookpad.com.bottomnavwatson.FirstFragment" />
+
+    <fragment
+        android:id="@id/secondTabFragment"
+        android:name="cookpad.com.bottomnavwatson.SecondFragment" />
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="cookpad.com.bottomnavwatson.DetailFragment" />
+
+</navigation>
