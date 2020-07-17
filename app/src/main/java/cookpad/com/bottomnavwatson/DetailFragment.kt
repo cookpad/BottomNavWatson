@@ -16,9 +16,6 @@ import kotlinx.android.synthetic.main.detail_fragment.*
 import java.util.*
 
 class DetailFragment : Fragment(R.layout.detail_fragment) {
-    companion object {
-        private const val CHANNEL_ID = "1"
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,5 +53,9 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     }
                 }
         }
+    }
+
+    companion object {
+        private const val CHANNEL_ID = "1"
     }
 }
