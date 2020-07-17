@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/firstTabFragment"
+        android:title="@string/first_tab" />
+    <item
+        android:id="@+id/secondTabFragment"
+        android:title="@string/second_tab" />
+</menu>
