@@ -95,9 +95,9 @@ fun BottomNavigationView.setupWithNavController(
                     .setPrimaryNavigationFragment(selectedFragment)
                     .apply {
                         // Detach all other Fragments
-                        tabIdToTagMap.forEach { _, fragmentTagIter ->
-                            if (fragmentTagIter != newlySelectedItemTag) {
-                                detach(fragmentManager.findFragmentByTag(fragmentTagIter)!!)
+                        tabIdToTagMap.forEach { _, fragmentTag ->
+                            if (fragmentTag != newlySelectedItemTag) {
+                                detach(fragmentManager.findFragmentByTag(fragmentTag)!!)
                             }
                         }
                     }
