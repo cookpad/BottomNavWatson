@@ -14,16 +14,16 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
- * NavController setup for BottomNavigationView with multiple back stacks and one single navigation graph.
+ * NavController setup for BottomNavigationView with multiple back stacks, one single navigation graph and lazy initialisation.
  * This implementations is an adaptation from the one that Google provides in its architecture-components-samples
- * that differs from it only in that this one allows to use a single nav graph for the entire app.
+ * that differs from it in that this one allows to use a single nav graph and the NavController of each tab is lazy initialized.
  * Original source: https://github.com/android/architecture-components-samples/blob/master/NavigationAdvancedSample
  * /app/src/main/java/com/example/android/navigationadvancedsample/NavigationExtensions.kt
  */
 fun BottomNavigationView.setupWithNavController(
     @NavigationRes graphResId: Int,
     activity: AppCompatActivity,
-    selectedTabId: Int,
+    initialSelectedTabId: Int,
     enabledTabs: List<Int>,
     containerId: Int,
     destinationChangedListener: NavController.OnDestinationChangedListener? = null,
@@ -36,16 +36,14 @@ fun BottomNavigationView.setupWithNavController(
     // Result. Mutable live data with the selected controlled
     val selectedNavController = MutableLiveData<NavController>()
 
-    val initialTabId = enabledTabs.first()
+    val initialSelectedTabIndex = enabledTabs.indexOf(initialSelectedTabId)
 
-    val index = enabledTabs.indexOf(selectedTabId)
-
-    selectedItemId = selectedTabId
+    selectedItemId = initialSelectedTabId
 
     initNavController(
         activity = activity,
-        index = index,
-        tabId = selectedTabId,
+        index = initialSelectedTabIndex,
+        tabId = initialSelectedTabId,
         graphResId = graphResId,
         containerId = containerId,
         tabIdToTagMap = tabIdToTagMap,
@@ -54,9 +52,9 @@ fun BottomNavigationView.setupWithNavController(
     )
 
     // Now connect selecting an item with swapping Fragments
-    var selectedItemTag = tabIdToTagMap[selectedTabId]
-    val initialFragmentTag = getFragmentTag(index)
-    var isOnInitialFragment = selectedItemTag == initialFragmentTag
+    var selectedItemTag = tabIdToTagMap[initialSelectedTabId]
+    val initialFragmentTag = getFragmentTag(initialSelectedTabIndex)
+    var isOnInitialFragment = true
 
     // When a navigation item is selected
     setOnNavigationItemSelectedListener { item ->
@@ -81,16 +79,16 @@ fun BottomNavigationView.setupWithNavController(
             }
 
             if (selectedItemTag != newlySelectedItemTag) {
-                // Pop everything above the selected fragment (the "fixed start destination")
+                // Pop everything above the initial fragment (the "fixed start destination")
                 fragmentManager.popBackStack(
-                    selectedItemTag,
+                    initialFragmentTag,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
 
                 val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
                         as NavHostFragment
 
-                // Commit a transaction that cleans the back stack and adds the selected fragment
+                // Commit a transaction that cleans the back stack and adds the initial fragment
                 // to it, creating the fixed started destination.
                 fragmentManager.beginTransaction()
                     .attach(selectedFragment)
@@ -103,8 +101,12 @@ fun BottomNavigationView.setupWithNavController(
                             }
                         }
                     }
-                    .addToBackStack(initialFragmentTag)
-                    .setReorderingAllowed(true)
+                    .apply {
+                        if (initialFragmentTag != newlySelectedItemTag) {
+                            addToBackStack(initialFragmentTag)
+                            setReorderingAllowed(true)
+                        }
+                    }
                     .commit()
 
                 destinationChangedListener?.let {
@@ -134,14 +136,14 @@ fun BottomNavigationView.setupWithNavController(
         activity,
         fragmentManager,
         containerId,
-        index,
-        selectedTabId
+        initialSelectedTabIndex,
+        initialSelectedTabId
     )
 
     // Finally, ensure that we update our BottomNavigationView when the back stack changes
     fragmentManager.addOnBackStackChangedListener {
         if (!isOnInitialFragment && !fragmentManager.isOnBackStack(initialFragmentTag)) {
-            this.selectedItemId = initialTabId
+            this.selectedItemId = initialSelectedTabId
         }
 
         // Reset the graph if the currentDestination is not valid (happens when the back

@@ -12,7 +12,7 @@ class HomeActivity : AppCompatActivity(R.layout.home_activity) {
         bottomNavigation.setupWithNavController(
             graphResId = R.navigation.nav_graph,
             activity = this,
-            selectedTabId = R.id.firstTabFragment,
+            initialSelectedTabId = R.id.firstTabFragment,
             enabledTabs = listOf(R.id.firstTabFragment, R.id.secondTabFragment),
             containerId = R.id.navigationHostFragment
         )
