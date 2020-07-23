@@ -22,6 +22,10 @@
         android:name="cookpad.com.bottomnavwatson.SecondFragment" />
 
     <fragment
+        android:id="@id/thirdTabFragment"
+        android:name="cookpad.com.bottomnavwatson.ThirdFragment" />
+
+    <fragment
         android:id="@+id/detailFragment"
         android:name="cookpad.com.bottomnavwatson.DetailFragment" />
 

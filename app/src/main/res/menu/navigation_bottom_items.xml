@@ -6,4 +6,7 @@
     <item
         android:id="@+id/secondTabFragment"
         android:title="@string/second_tab" />
+    <item
+        android:id="@+id/thirdTabFragment"
+        android:title="@string/third_tab" />
 </menu>

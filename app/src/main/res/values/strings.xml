@@ -4,6 +4,8 @@
     <string name="first_tab_action">Click to navigate from first tab to a detail</string>
     <string name="second_tab">Second tab</string>
     <string name="second_tab_action">Click to navigate from second tab to a detail</string>
+    <string name="third_tab">Third tab</string>
+    <string name="third_tab_action">Click to navigate from third tab to a detail</string>
     <string name="detail_fragment">Detail fragment</string>
     <string name="test_deep_links">Test deep links by clicking here and creating a notification</string>
     <string name="watson_deep_links">Watson deep links</string>

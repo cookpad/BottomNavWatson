@@ -28,7 +28,7 @@ allprojects {
 Add to app module gradle.build file
 ```
 dependencies {
-    compile 'com.github.cookpad:BottomNavWatson:0.0.2'
+    compile 'com.github.cookpad:BottomNavWatson:0.0.3'
 }
 ```
 
@@ -38,7 +38,7 @@ The API is pretty much the same that is provided in Google Samples: an extension
 fun BottomNavigationView.setupWithNavController(
     @NavigationRes graphResId: Int,
     activity: AppCompatActivity,
-    selectedTabId: Int,
+    initialSelectedTabId: Int,
     enabledTabs: List<Int>,
     containerId: Int,
     destinationChangedListener: NavController.OnDestinationChangedListener? = null,
@@ -67,7 +67,7 @@ This is required by Watson lib to avoid crashing when the graph is inflated for 
 ### Sample app
 There is a showcase in :app module to have access to a more detailed usage of Watson library.
 
-![](docs/images/first.png) ![](docs/images/second.png) ![](docs/images/detail.png) ![](docs/images/notification.png)
+![](docs/images/first.png) ![](docs/images/second.png) ![](docs/images/third.png) ![](docs/images/detail.png) ![](docs/images/notification.png)
 
 
 ### Disclaimer
