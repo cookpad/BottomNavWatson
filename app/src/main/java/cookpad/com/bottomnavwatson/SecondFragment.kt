@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
-import kotlinx.android.synthetic.main.second_fragment.*
+import kotlinx.android.synthetic.main.second_fragment.textViewSecondTab
 
 class SecondFragment : Fragment(R.layout.second_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
