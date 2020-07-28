@@ -11,7 +11,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.0"
-
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.9.1"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -21,7 +21,16 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+    }
+
+    apply plugin: "io.gitlab.arturbosch.detekt"
+    dependencies {
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.9.1"
+    }
+    detekt {
+        input = files("src/main/kotlin", "src/main/java", "src/androidTest/kotlin", "src/androidTest/java")
+        config = files("../detekt-config.yml")
+        autoCorrect = true
     }
 }
 
