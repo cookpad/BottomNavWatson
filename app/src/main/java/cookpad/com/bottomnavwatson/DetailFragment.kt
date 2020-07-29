@@ -12,8 +12,9 @@ import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import kotlinx.android.synthetic.main.detail_fragment.*
-import java.util.*
+import kotlinx.android.synthetic.main.detail_fragment.toolbar
+import kotlinx.android.synthetic.main.detail_fragment.tvTestDeepLinks
+import java.util.Random
 
 class DetailFragment : Fragment(R.layout.detail_fragment) {
 

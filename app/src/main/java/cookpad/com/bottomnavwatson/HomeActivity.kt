@@ -3,7 +3,7 @@ package cookpad.com.bottomnavwatson
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import bottom_nav_watson.setupWithNavController
-import kotlinx.android.synthetic.main.home_activity.*
+import kotlinx.android.synthetic.main.home_activity.bottomNavigation
 
 class HomeActivity : AppCompatActivity(R.layout.home_activity) {
     override fun onCreate(savedInstanceState: Bundle?) {
