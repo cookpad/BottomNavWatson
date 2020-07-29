@@ -106,7 +106,6 @@ class HomeTest : TestCase() {
         }
     }
 
-
     @Test
     fun verifyExplicitDeepLink() {
         run {

@@ -1,4 +1,4 @@
-package bottom_nav_watson
+package watson
 
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
@@ -25,12 +25,12 @@ class LenientNavHostFragment : NavHostFragment() {
     }
 
     companion object {
-        // We need to duplicate here the key as it's a private field in the library, which is brittle but it is what it is.
+        // We need to duplicate here the key as it's a private field in the library,
+        // which is brittle but it is what it is.
         private const val KEY_GRAPH_ID = "android-support-nav:fragment:graphId"
 
         fun create(graphResId: Int): NavHostFragment = LenientNavHostFragment().apply {
             arguments = Bundle().apply { putInt(KEY_GRAPH_ID, graphResId) }
         }
     }
-
 }
