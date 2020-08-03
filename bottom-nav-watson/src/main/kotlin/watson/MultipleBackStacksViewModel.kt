@@ -1,15 +1,19 @@
 package watson
 
 import android.content.Intent
+import android.os.Parcelable
 import android.util.SparseArray
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.forEach
 import androidx.core.util.set
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.parcel.Parcelize
 
 /**
  * NavController setup for BottomNavigationView with multiple back stacks, one single navigation graph
@@ -19,15 +23,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
  * Original source: https://github.com/android/architectureºº-components-samples/blob/master/NavigationAdvancedSample
  * /app/src/main/java/com/example/android/navigationadvancedsample/NavigationExtensions.kt
  */
-internal class NavControllerMultipleBackStacks(
+internal class MultipleBackStacksViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val graphResId: Int,
     private val activity: AppCompatActivity,
     private val initialSelectedTabId: Int,
     private val enabledTabs: List<Int>,
     private val containerId: Int
-) {
+) : ViewModel() {
+    private val tabIdToFragmentTag: SparseArray<FragmentTag> =
+        savedStateHandle[KEY_TAB_ID_TO_FRAGMENT_TAG] ?: SparseArray<FragmentTag>()
     private val fragmentManager = activity.supportFragmentManager
-    private val tabIdToFragmentTag = SparseArray<String>()
     private val selectedNavController = MutableLiveData<NavController>()
     private val initialSelectedTabIndex = enabledTabs.indexOf(initialSelectedTabId)
     private val initialFragmentTag = getFragmentTag(initialSelectedTabIndex)
@@ -41,11 +47,13 @@ internal class NavControllerMultipleBackStacks(
     ): MutableLiveData<NavController> {
         bottomNavigationView.selectedItemId = initialSelectedTabId
 
-        initNavController(
-            index = initialSelectedTabIndex,
-            tabId = initialSelectedTabId,
-            destinationChangedListener = destinationChangedListener
-        )
+        if (tabIdToFragmentTag[initialSelectedTabId] == null) {
+            initNavController(
+                index = initialSelectedTabIndex,
+                tabId = initialSelectedTabId,
+                destinationChangedListener = destinationChangedListener
+            )
+        }
 
         bottomNavigationView.apply {
             setupOnNavigationItemSelectedListener(destinationChangedListener)
@@ -79,16 +87,16 @@ internal class NavControllerMultipleBackStacks(
                 }
 
                 if (selectedFragmentTag != newlySelectedFragmentTag) {
-                    val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedFragmentTag)
+                    val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedFragmentTag.name)
                             as NavHostFragment
 
-                    switchBackStack(newlySelectedFragmentTag, selectedFragment)
+                    switchBackStack(newlySelectedFragmentTag.name, selectedFragment)
 
                     destinationChangedListener?.let {
                         selectedNavController.value?.removeOnDestinationChangedListener(destinationChangedListener)
                     }
                     selectedFragmentTag = newlySelectedFragmentTag
-                    isOnInitialFragment = selectedFragmentTag == initialFragmentTag
+                    isOnInitialFragment = selectedFragmentTag.name == initialFragmentTag
                     selectedNavController.value = selectedFragment.navController.apply {
                         destinationChangedListener?.let {
                             addOnDestinationChangedListener(destinationChangedListener)
@@ -119,8 +127,8 @@ internal class NavControllerMultipleBackStacks(
             .apply {
                 // Detach all other Fragments
                 tabIdToFragmentTag.forEach { _, fragmentTag ->
-                    if (fragmentTag != newlySelectedFragmentTag) {
-                        detach(fragmentManager.findFragmentByTag(fragmentTag)!!)
+                    if (fragmentTag.name != newlySelectedFragmentTag) {
+                        detach(fragmentManager.findFragmentByTag(fragmentTag.name)!!)
                     }
                 }
             }
@@ -145,7 +153,8 @@ internal class NavControllerMultipleBackStacks(
         val navHostFragment = obtainNavHostFragment(fragmentTag, tabId)
 
         // Save to the map
-        tabIdToFragmentTag[tabId] = fragmentTag
+        tabIdToFragmentTag[tabId] = FragmentTag(fragmentTag)
+        savedStateHandle.set(KEY_TAB_ID_TO_FRAGMENT_TAG, tabIdToFragmentTag)
 
         // Update livedata with the selected graph
         selectedNavController.value = navHostFragment.navController.apply {
@@ -204,7 +213,7 @@ internal class NavControllerMultipleBackStacks(
             navigationItemReselectedListener?.onNavigationItemReselected(item)
 
             val newlySelectedItemTag = tabIdToFragmentTag[item.itemId]
-            (fragmentManager.findFragmentByTag(newlySelectedItemTag) as? NavHostFragment)?.let {
+            (fragmentManager.findFragmentByTag(newlySelectedItemTag.name) as? NavHostFragment)?.let {
                 val navController = it.navController
                 // Pop the back stack to the start destination of the current navController graph
                 navController.popBackStack(navController.graph.startDestination, false)
@@ -230,6 +239,10 @@ internal class NavControllerMultipleBackStacks(
     }
 
     private fun getFragmentTag(index: Int) = "bottomNavigation#$index"
+
+    companion object {
+        private const val KEY_TAB_ID_TO_FRAGMENT_TAG = "keyTabIdToFragmentTag"
+    }
 }
 
 private fun FragmentManager.isOnBackStack(backStackName: String): Boolean {
@@ -241,3 +254,6 @@ private fun FragmentManager.isOnBackStack(backStackName: String): Boolean {
     }
     return false
 }
+
+@Parcelize
+data class FragmentTag(val name: String) : Parcelable
