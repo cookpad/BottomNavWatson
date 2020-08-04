@@ -9,7 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
  * 2.3.0 of the navigation component. Specifically, it crashes when the NavHostFragment
  * tries to dispose itself by finding its associated NavController and there is none.
  */
-class LenientNavHostFragment : NavHostFragment() {
+internal class LenientNavHostFragment : NavHostFragment() {
 
     override fun onDestroyView() {
         try {
