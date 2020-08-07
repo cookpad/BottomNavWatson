@@ -8,8 +8,6 @@ import androidx.core.util.forEach
 import androidx.core.util.set
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,16 +21,15 @@ import kotlinx.android.parcel.Parcelize
  * Original source: https://github.com/android/architectureºº-components-samples/blob/master/NavigationAdvancedSample
  * /app/src/main/java/com/example/android/navigationadvancedsample/NavigationExtensions.kt
  */
-internal class MultipleBackStacksViewModel(
-    private val savedStateHandle: SavedStateHandle,
+internal class MultipleBackStacks(
+    private val fragmentTagsViewModel: FragmentTagsViewModel,
     private val graphResId: Int,
     private val activity: AppCompatActivity,
     private val initialSelectedTabId: Int,
     private val enabledTabs: List<Int>,
     private val containerId: Int
-) : ViewModel() {
-    private val tabIdToFragmentTag: SparseArray<FragmentTag> =
-        savedStateHandle[KEY_TAB_ID_TO_FRAGMENT_TAG] ?: SparseArray<FragmentTag>()
+) {
+    private val tabIdToFragmentTag: SparseArray<FragmentTag> = fragmentTagsViewModel.getTabIdToFragmentTag()
     private val fragmentManager = activity.supportFragmentManager
     private val selectedNavController = MutableLiveData<NavController>()
     private val initialSelectedTabIndex = enabledTabs.indexOf(initialSelectedTabId)
@@ -154,7 +151,7 @@ internal class MultipleBackStacksViewModel(
 
         // Save to the map
         tabIdToFragmentTag[tabId] = FragmentTag(fragmentTag)
-        savedStateHandle.set(KEY_TAB_ID_TO_FRAGMENT_TAG, tabIdToFragmentTag)
+        fragmentTagsViewModel.updateTabIdToFragmentTag(tabIdToFragmentTag)
 
         // Update livedata with the selected graph
         selectedNavController.value = navHostFragment.navController.apply {
@@ -239,10 +236,6 @@ internal class MultipleBackStacksViewModel(
     }
 
     private fun getFragmentTag(index: Int) = "bottomNavigation#$index"
-
-    companion object {
-        private const val KEY_TAB_ID_TO_FRAGMENT_TAG = "keyTabIdToFragmentTag"
-    }
 }
 
 private fun FragmentManager.isOnBackStack(backStackName: String): Boolean {
