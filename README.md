@@ -28,7 +28,7 @@ allprojects {
 Add to app module gradle.build file
 ```
 dependencies {
-    compile 'com.github.cookpad:BottomNavWatson:0.0.5'
+    compile 'com.github.cookpad:BottomNavWatson:0.0.6'
 }
 ```
 
