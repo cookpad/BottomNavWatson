@@ -29,19 +29,21 @@ fun BottomNavigationView.setupWithNavController(
                 modelClass: Class<T>,
                 savedStateHandle: SavedStateHandle
             ): T {
-                return MultipleBackStacksViewModel(
-                    savedStateHandle = savedStateHandle,
-                    graphResId = graphResId,
-                    activity = activity,
-                    initialSelectedTabId = initialSelectedTabId,
-                    enabledTabs = enabledTabs,
-                    containerId = containerId
+                return FragmentTagsViewModel(
+                    savedStateHandle = savedStateHandle
                 ) as T
             }
         }
-    ).get(MultipleBackStacksViewModel::class.java)
+    ).get(FragmentTagsViewModel::class.java)
 
-    return viewModel.onBottomNavigationView(
+    return MultipleBackStacks(
+        fragmentTagsViewModel = viewModel,
+        graphResId = graphResId,
+        activity = activity,
+        initialSelectedTabId = initialSelectedTabId,
+        enabledTabs = enabledTabs,
+        containerId = containerId
+    ).onBottomNavigationView(
         bottomNavigationView = this,
         destinationChangedListener = destinationChangedListener,
         navigationItemReselectedListener = navigationItemReselectedListener

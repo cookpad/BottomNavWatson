@@ -1,5 +1,6 @@
 package cookpad.com.bottomnavwatson
 
+import android.content.pm.ActivityInfo
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.agoda.kakao.bottomnav.KBottomNavigationView
@@ -145,6 +146,21 @@ class HomeTest : TestCase() {
                 onScreen<HomeScreen> {
                     bottomNavigationView { setSelectedItem(R.id.secondTabFragment) }
                     tvTestDeepLinks { doesNotExist() }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun verifyConfigChangeByRotatingDevice() {
+        run {
+            step("Rotate the device to detonate a config change") {
+                activityRule.activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+
+            step("Check the app did not crash by asserting on any view") {
+                onScreen<HomeScreen> {
+                    textViewFirstTab { isDisplayed() }
                 }
             }
         }
