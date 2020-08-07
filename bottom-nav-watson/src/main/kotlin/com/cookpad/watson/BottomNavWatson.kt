@@ -1,4 +1,4 @@
-package watson
+package com.cookpad.watson
 
 import androidx.annotation.NavigationRes
 import androidx.appcompat.app.AppCompatActivity
