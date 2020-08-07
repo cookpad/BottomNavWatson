@@ -1,4 +1,4 @@
-package watson
+package com.cookpad.watson
 
 import android.content.Intent
 import android.os.Parcelable

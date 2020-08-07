@@ -2,7 +2,7 @@ package cookpad.com.bottomnavwatson
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import watson.setupWithNavController
+import com.cookpad.watson.setupWithNavController
 import kotlinx.android.synthetic.main.home_activity.bottomNavigation
 
 class HomeActivity : AppCompatActivity(R.layout.home_activity) {

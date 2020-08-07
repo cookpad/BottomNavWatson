@@ -1,4 +1,4 @@
-package watson
+package com.cookpad.watson
 
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
