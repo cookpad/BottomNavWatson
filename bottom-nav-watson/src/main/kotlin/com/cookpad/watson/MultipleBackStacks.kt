@@ -54,7 +54,7 @@ internal class MultipleBackStacks(
 
         bottomNavigationView.apply {
             setupOnNavigationItemSelectedListener(destinationChangedListener)
-            setupItemReselected(navigationItemReselectedListener)
+            setupItemReselected(navigationItemReselectedListener, destinationChangedListener)
             setupOnBackStackChangedListener()
         }
 
@@ -204,10 +204,21 @@ internal class MultipleBackStacks(
     }
 
     private fun BottomNavigationView.setupItemReselected(
-        navigationItemReselectedListener: BottomNavigationView.OnNavigationItemReselectedListener?
+        navigationItemReselectedListener: BottomNavigationView.OnNavigationItemReselectedListener?,
+        destinationChangedListener: NavController.OnDestinationChangedListener? = null
     ) {
         setOnNavigationItemReselectedListener { item ->
             navigationItemReselectedListener?.onNavigationItemReselected(item)
+
+            // We should not need this here, but we got a NPE if we don't init the nav controller for the item id
+            // in some cases that we're not able to replicate but that nevertheless are reported on Crashlytics
+            if (tabIdToFragmentTag[item.itemId] == null) {
+                initNavController(
+                    index = enabledTabs.indexOf(item.itemId),
+                    tabId = item.itemId,
+                    destinationChangedListener = destinationChangedListener
+                )
+            }
 
             val newlySelectedItemTag = tabIdToFragmentTag[item.itemId]
             (fragmentManager.findFragmentByTag(newlySelectedItemTag.name) as? NavHostFragment)?.let {
