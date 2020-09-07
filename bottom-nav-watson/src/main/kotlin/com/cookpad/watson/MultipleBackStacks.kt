@@ -2,7 +2,6 @@ package com.cookpad.watson
 
 import android.content.Intent
 import android.os.Parcelable
-import android.util.SparseArray
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.forEach
 import androidx.core.util.set
@@ -29,12 +28,10 @@ internal class MultipleBackStacks(
     private val enabledTabs: List<Int>,
     private val containerId: Int
 ) {
-    private val tabIdToFragmentTag: SparseArray<FragmentTag> = fragmentTagsViewModel.getTabIdToFragmentTag()
     private val fragmentManager = activity.supportFragmentManager
     private val selectedNavController = MutableLiveData<NavController>()
     private val initialSelectedTabIndex = enabledTabs.indexOf(initialSelectedTabId)
     private val initialFragmentTag = getFragmentTag(initialSelectedTabIndex)
-    private var selectedFragmentTag = tabIdToFragmentTag[initialSelectedTabId]
     private var isOnInitialFragment = true
 
     fun onBottomNavigationView(
@@ -44,7 +41,7 @@ internal class MultipleBackStacks(
     ): MutableLiveData<NavController> {
         bottomNavigationView.selectedItemId = initialSelectedTabId
 
-        if (tabIdToFragmentTag[initialSelectedTabId] == null) {
+        if (fragmentTagsViewModel.tabIdToFragmentTag[initialSelectedTabId] == null) {
             initNavController(
                 index = initialSelectedTabIndex,
                 tabId = initialSelectedTabId,
@@ -71,19 +68,19 @@ internal class MultipleBackStacks(
             if (fragmentManager.isStateSaved) {
                 false
             } else {
-                val newlySelectedFragmentTag = if (tabIdToFragmentTag[item.itemId] == null) {
+                val newlySelectedFragmentTag = if (fragmentTagsViewModel.tabIdToFragmentTag[item.itemId] == null) {
                     // Lazy initialization
                     initNavController(
                         index = enabledTabs.indexOf(item.itemId),
                         tabId = item.itemId,
                         destinationChangedListener = destinationChangedListener
                     )
-                    tabIdToFragmentTag[item.itemId]
+                    fragmentTagsViewModel.tabIdToFragmentTag[item.itemId]
                 } else {
-                    tabIdToFragmentTag[item.itemId]
+                    fragmentTagsViewModel.tabIdToFragmentTag[item.itemId]
                 }
 
-                if (selectedFragmentTag != newlySelectedFragmentTag) {
+                if (fragmentTagsViewModel.selectedFragmentTag != newlySelectedFragmentTag) {
                     val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedFragmentTag.name)
                             as NavHostFragment
 
@@ -92,8 +89,8 @@ internal class MultipleBackStacks(
                     destinationChangedListener?.let {
                         selectedNavController.value?.removeOnDestinationChangedListener(destinationChangedListener)
                     }
-                    selectedFragmentTag = newlySelectedFragmentTag
-                    isOnInitialFragment = selectedFragmentTag.name == initialFragmentTag
+                    fragmentTagsViewModel.selectedFragmentTag = newlySelectedFragmentTag
+                    isOnInitialFragment = newlySelectedFragmentTag.name == initialFragmentTag
                     selectedNavController.value = selectedFragment.navController.apply {
                         destinationChangedListener?.let {
                             addOnDestinationChangedListener(destinationChangedListener)
@@ -123,7 +120,7 @@ internal class MultipleBackStacks(
             .setPrimaryNavigationFragment(selectedFragment)
             .apply {
                 // Detach all other Fragments
-                tabIdToFragmentTag.forEach { _, fragmentTag ->
+                fragmentTagsViewModel.tabIdToFragmentTag.forEach { _, fragmentTag ->
                     if (fragmentTag.name != newlySelectedFragmentTag) {
                         detach(fragmentManager.findFragmentByTag(fragmentTag.name)!!)
                     }
@@ -150,8 +147,7 @@ internal class MultipleBackStacks(
         val navHostFragment = obtainNavHostFragment(fragmentTag, tabId)
 
         // Save to the map
-        tabIdToFragmentTag[tabId] = FragmentTag(fragmentTag)
-        fragmentTagsViewModel.updateTabIdToFragmentTag(tabIdToFragmentTag)
+        fragmentTagsViewModel.tabIdToFragmentTag[tabId] = FragmentTag(fragmentTag)
 
         // Update livedata with the selected graph
         selectedNavController.value = navHostFragment.navController.apply {
@@ -212,7 +208,7 @@ internal class MultipleBackStacks(
 
             // We should not need this here, but we got a NPE if we don't init the nav controller for the item id
             // in some cases that we're not able to replicate but that nevertheless are reported on Crashlytics
-            if (tabIdToFragmentTag[item.itemId] == null) {
+            if (fragmentTagsViewModel.tabIdToFragmentTag[item.itemId] == null) {
                 initNavController(
                     index = enabledTabs.indexOf(item.itemId),
                     tabId = item.itemId,
@@ -220,7 +216,7 @@ internal class MultipleBackStacks(
                 )
             }
 
-            val newlySelectedItemTag = tabIdToFragmentTag[item.itemId]
+            val newlySelectedItemTag = fragmentTagsViewModel.tabIdToFragmentTag[item.itemId]
             (fragmentManager.findFragmentByTag(newlySelectedItemTag.name) as? NavHostFragment)?.let {
                 val navController = it.navController
                 // Pop the back stack to the start destination of the current navController graph
