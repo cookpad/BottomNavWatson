@@ -165,4 +165,32 @@ class HomeTest : TestCase() {
             }
         }
     }
+
+    @Test
+    fun verifyCanSelectFirstTabAfterScreenRotate() {
+        run {
+            step("Select first tab") {
+                onScreen<HomeScreen> {
+                    bottomNavigationView { setSelectedItem(R.id.firstTabFragment) }
+                }
+            }
+            step("Select second tab") {
+                onScreen<HomeScreen> {
+                    bottomNavigationView { setSelectedItem(R.id.secondTabFragment) }
+                }
+            }
+            step("Rotate the device to detonate a config change") {
+                activityRule.activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+
+            step("Select first tab and check contents") {
+                onScreen<HomeScreen> {
+                    bottomNavigationView { setSelectedItem(R.id.firstTabFragment) }
+                    textViewFirstTab { isDisplayed() }
+                    textViewSecondTab { doesNotExist() }
+                    textViewThirdTab { doesNotExist() }
+                }
+            }
+        }
+    }
 }
