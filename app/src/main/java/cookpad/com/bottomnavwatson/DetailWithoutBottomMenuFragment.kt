@@ -14,10 +14,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.detail_fragment.toolbar
 import kotlinx.android.synthetic.main.detail_fragment.tvTestDeepLinks
-import kotlinx.android.synthetic.main.detail_fragment.tvWithoutBottomMenu
 import java.util.Random
 
-class DetailFragment : Fragment(R.layout.detail_fragment) {
+class DetailWithoutBottomMenuFragment : Fragment(R.layout.detail_without_bottom_menu_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +38,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
         tvTestDeepLinks.setOnClickListener {
             val explicitDeepLink = NavDeepLinkBuilder(requireContext())
                 .setGraph(R.navigation.nav_graph)
-                .setDestination(R.id.detailFragment)
+                .setDestination(R.id.detailWithoutBottomFragment)
                 .setComponentName(HomeActivity::class.java)
                 .createPendingIntent()
 
@@ -55,14 +54,9 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     }
                 }
         }
-
-        tvWithoutBottomMenu.setOnClickListener {
-            findNavController(this)
-                .navigate(NavGraphDirections.actionDetailWithoutBottomMenuFragment())
-        }
     }
 
     companion object {
-        private const val CHANNEL_ID = "1"
+        private const val CHANNEL_ID = "2"
     }
 }

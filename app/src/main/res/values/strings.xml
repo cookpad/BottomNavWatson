@@ -7,7 +7,9 @@
     <string name="third_tab">Third tab</string>
     <string name="third_tab_action">Click to navigate from third tab to a detail</string>
     <string name="detail_fragment">Detail fragment</string>
+    <string name="detail_without_bottom_menu_fragment">Detail without bottom menu</string>
     <string name="test_deep_links">Test deep links by clicking here and creating a notification</string>
     <string name="watson_deep_links">Watson deep links</string>
     <string name="watson_deep_links_desc">Click the notification to the open the sample app</string>
+    <string name="open_without_bottom_menu">Click to navigate to a detail without bottom menu</string>
 </resources>

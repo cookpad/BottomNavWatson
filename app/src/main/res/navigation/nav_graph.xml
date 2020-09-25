@@ -8,6 +8,10 @@
         android:id="@+id/actionDetailFragment"
         app:destination="@id/detailFragment" />
 
+    <action
+        android:id="@+id/actionDetailWithoutBottomMenuFragment"
+        app:destination="@id/detailWithoutBottomFragment" />
+
     <!-- Required by watson lib to avoid crashing when the graph is inflated for each tab. -->
     <fragment
         android:id="@+id/emptyFragment"
@@ -28,5 +32,9 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="cookpad.com.bottomnavwatson.DetailFragment" />
+
+    <fragment
+        android:id="@+id/detailWithoutBottomFragment"
+        android:name="cookpad.com.bottomnavwatson.DetailWithoutBottomMenuFragment" />
 
 </navigation>
