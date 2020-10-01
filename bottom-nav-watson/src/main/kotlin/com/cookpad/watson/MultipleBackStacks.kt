@@ -48,6 +48,7 @@ internal class MultipleBackStacks(
                 tabId = initialSelectedTabId,
                 destinationChangedListener = destinationChangedListener
             )
+            fragmentTagsViewModel.selectedFragmentTag = fragmentTagsViewModel.tabIdToFragmentTag[initialSelectedTabId]
         } else {
             restoreNavController(destinationChangedListener)
         }
