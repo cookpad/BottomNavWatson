@@ -61,7 +61,9 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                 }
         }
 
-        toolbar.setTitle(if (args.hideNavBar) R.string.detail_without_bottom_menu_fragment else R.string.detail_fragment)
+        toolbar.setTitle(
+            if (args.hideNavBar) R.string.detail_without_bottom_menu_fragment else R.string.detail_fragment
+        )
         tvWithoutBottomMenu.isVisible = !args.hideNavBar
         if (!args.hideNavBar) {
             tvWithoutBottomMenu.setOnClickListener {
