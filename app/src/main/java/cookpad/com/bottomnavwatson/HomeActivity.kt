@@ -26,7 +26,7 @@ class HomeActivity : AppCompatActivity(R.layout.home_activity) {
     private fun destinationChangedListener(): OnDestinationChangedListener {
         return OnDestinationChangedListener { controller: NavController, destination: NavDestination, args: Bundle? ->
             bottomNavigation.isVisible = when (destination.id) {
-                R.id.detailWithoutBottomFragment -> false
+                R.id.detailFragment -> if (args != null) !DetailFragmentArgs.fromBundle(args).hideNavBar else true
                 else -> true
             }
         }
