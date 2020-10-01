@@ -65,8 +65,7 @@ internal class MultipleBackStacks(
     }
 
     private fun restoreNavController(destinationChangedListener: NavController.OnDestinationChangedListener?) {
-        val fragmentTag = fragmentTagsViewModel.selectedFragmentTag?.name ?: return
-        val selectedFragment = fragmentManager.findFragmentByTag(fragmentTag) as NavHostFragment
+        val selectedFragment = fragmentManager.primaryNavigationFragment as NavHostFragment
         selectedNavController.value = selectedFragment.navController.apply {
             destinationChangedListener?.let { addOnDestinationChangedListener(it) }
         }
