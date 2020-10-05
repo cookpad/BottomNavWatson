@@ -27,6 +27,11 @@
 
     <fragment
         android:id="@+id/detailFragment"
-        android:name="cookpad.com.bottomnavwatson.DetailFragment" />
+        android:name="cookpad.com.bottomnavwatson.DetailFragment">
+        <argument
+            android:name="hideNavBar"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
 
 </navigation>

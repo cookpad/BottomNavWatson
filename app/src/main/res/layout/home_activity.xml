@@ -26,7 +26,7 @@
             android:layout_gravity="bottom"
             android:background="@color/colorPrimary"
             android:theme="@style/Theme.MaterialComponents.Light"
-            app:itemTextColor="@color/colorWhite"
+            app:itemTextColor="@color/navigation_text_selector"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_insetEdge="bottom"

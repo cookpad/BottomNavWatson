@@ -21,6 +21,7 @@ class HomeScreen : Screen<HomeScreen>() {
     val textViewSecondTab = KTextView { withId(R.id.textViewSecondTab) }
     val textViewThirdTab = KTextView { withId(R.id.textViewThirdTab) }
     val tvTestDeepLinks = KTextView { withId(R.id.tvTestDeepLinks) }
+    val tvWithoutBottomMenu = KTextView { withId(R.id.tvWithoutBottomMenu) }
 }
 
 object SystemScreen : UiScreen<SystemScreen>() {
@@ -189,6 +190,30 @@ class HomeTest : TestCase() {
                     textViewFirstTab { isDisplayed() }
                     textViewSecondTab { doesNotExist() }
                     textViewThirdTab { doesNotExist() }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun verifyBottomMenuNotVisibleAfterScreenRotate() {
+        run {
+            step("Select second tab and navigate to detail without bottom menu") {
+                onScreen<HomeScreen> {
+                    bottomNavigationView { setSelectedItem(R.id.secondTabFragment) }
+                    textViewSecondTab { click() }
+                    tvTestDeepLinks { isDisplayed() }
+                    tvWithoutBottomMenu { click() }
+                    bottomNavigationView { isNotDisplayed() }
+                }
+            }
+            step("Rotate the device to detonate a config change") {
+                activityRule.activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+
+            step("Check that bottom menu is not displayed") {
+                onScreen<HomeScreen> {
+                    bottomNavigationView { isNotDisplayed() }
                 }
             }
         }

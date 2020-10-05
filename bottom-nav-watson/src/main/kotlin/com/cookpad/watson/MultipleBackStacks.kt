@@ -32,7 +32,8 @@ internal class MultipleBackStacks(
     private val selectedNavController = MutableLiveData<NavController>()
     private val initialSelectedTabIndex = enabledTabs.indexOf(initialSelectedTabId)
     private val initialFragmentTag = getFragmentTag(initialSelectedTabIndex)
-    private var isOnInitialFragment = true
+    private val isOnInitialFragment: Boolean
+        get() = fragmentTagsViewModel.selectedFragmentTag?.name == initialFragmentTag
 
     fun onBottomNavigationView(
         bottomNavigationView: BottomNavigationView,
@@ -47,6 +48,9 @@ internal class MultipleBackStacks(
                 tabId = initialSelectedTabId,
                 destinationChangedListener = destinationChangedListener
             )
+            fragmentTagsViewModel.selectedFragmentTag = fragmentTagsViewModel.tabIdToFragmentTag[initialSelectedTabId]
+        } else {
+            restoreNavController(destinationChangedListener)
         }
 
         bottomNavigationView.apply {
@@ -59,6 +63,13 @@ internal class MultipleBackStacks(
             .navController.handleDeepLink(activity.intent)
 
         return selectedNavController
+    }
+
+    private fun restoreNavController(destinationChangedListener: NavController.OnDestinationChangedListener?) {
+        val selectedFragment = fragmentManager.primaryNavigationFragment as NavHostFragment
+        selectedNavController.value = selectedFragment.navController.apply {
+            destinationChangedListener?.let { addOnDestinationChangedListener(it) }
+        }
     }
 
     private fun BottomNavigationView.setupOnNavigationItemSelectedListener(
@@ -90,7 +101,6 @@ internal class MultipleBackStacks(
                         selectedNavController.value?.removeOnDestinationChangedListener(destinationChangedListener)
                     }
                     fragmentTagsViewModel.selectedFragmentTag = newlySelectedFragmentTag
-                    isOnInitialFragment = newlySelectedFragmentTag.name == initialFragmentTag
                     selectedNavController.value = selectedFragment.navController.apply {
                         destinationChangedListener?.let {
                             addOnDestinationChangedListener(destinationChangedListener)
