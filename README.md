@@ -1,3 +1,7 @@
+# This repository is no longer mantained. 
+The Jetpack navigtion component supports now using the BottomNavigationBar with one single navigation graph per application :tada:
+
+# Deprecated library
 An Android library that allows, when using the BottomNavigationBar, to consume the multiple back stack workaround provided on [Google Samples](https://github.com/android/architecture-components-samples/blob/master/NavigationAdvancedSample/app/src/main/java/com/example/android/navigationadvancedsample/NavigationExtensions.kt) with one single navigation graph per application.
 
 ### When to use this library?
